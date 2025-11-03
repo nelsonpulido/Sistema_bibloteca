@@ -40,3 +40,4 @@ class Libro extends Model
         return $this->hasMany(Prestamo::class, 'id_libro', 'id_libro');
     }
 }
+
