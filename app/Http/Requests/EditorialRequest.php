@@ -21,11 +21,21 @@ class EditorialRequest extends FormRequest
      */
     public function rules(): array
     {
+        $isUpdate = in_array($this->method(), ['PUT', 'PATCH']);
+
         return [
-            'nombre' => 'required|string|max:100',
-            'direccion' => 'nullable|string|max:150',
+            'nombre' => ($isUpdate ? 'sometimes' : 'required').'|required|string|max:50',
+            'direccion' => 'nullable|string|max:50',
             'telefono' => 'nullable|string|max:20',
-            'email' => 'nullable|email|max:100',
+            'email' => 'nullable|email|max:30',
+        ];
+    }
+
+    public function message():array
+    {
+        return [
+            'nombre.required' => 'El nombre de la editorial es obligatorio.',
+            'nombre.max' => 'El nombre no puede tener más de 50 caracteres.',
         ];
     }
 }

@@ -21,10 +21,19 @@ class AutorRequest extends FormRequest
      */
     public function rules(): array
     {
+        $isUpdate = in_array($this->method(),['PUT','PATCH']);
         return [
-            'nombre' => 'required|string|max:100',
+            'nombre' =>($isUpdate ? 'sometimes' : 'required').'|required|string|max:50',
             'nacionalidad' => 'nullable|string|max:50',
             'fecha_nacimiento' => 'nullable|date',
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'nombre.required' => 'El nombre del autor es obligatorio.',
+            'nombre.max' => 'El nombre no puede superar los 100 caracteres.',
         ];
     }
 }

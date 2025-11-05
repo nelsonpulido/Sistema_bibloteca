@@ -21,17 +21,42 @@ class UsuarioRequest extends FormRequest
      */
     public function rules(): array
     {
+        $isUpdate = in_array($this->method(),['PUT', 'PATCH']);
+
+
         return [
-            'dni' => 'required|string|max:20',
-            'nombre' => 'required|string|max:50',
-            'apellidos' => 'required|string|max:50',
-            'email' => 'required|email|max:100|unique:usuarios,email',
+            'dni'=>($isUpdate ? 'sometime' : 'required').'|string|max:10',
+            'nombre'=>($isUpdate ? 'sometime' : 'required').'|string,max:30|min:15',
+            'apellidos'=>($isUpdate ? 'sometime' : 'required').'|string|max:20|min:10',
+            'email'=>($isUpdate ? 'sometime' : 'required').'|email|max:50|unique:usuarios,email',
             'telefono' => 'nullable|string|max:20',
-            'direccion' => 'nullable|string|max:180',
+            'direccion' => 'nullable|string|max:50',
             'fecha_registro' => 'nullable|date',
-            'tipo_usuario' => 'required|string|max:30',
-            'contraseña' => 'required|string|min:6',
+            'tipo_usuario' => ($isUpdate ? 'sometimes' : 'required').'|string|max:30',
+            'contrasena' => ($isUpdate ? 'sometimes' : 'required').'|string|min:6',
             'activo' => 'boolean',
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'dni.required' => 'El DNI es obligatorio.',
+            'dni.max' => 'El DNI no puede tener más de 10 caracteres.',
+
+            'nombre.required' => 'El nombre es obligatorio.',
+            'nombre.max' => 'El nombre no puede superar los 30 caracteres.',
+
+            'apellidos.required' => 'Los apellidos son obligatorios.',
+            'apellidos.max' => 'Los apellidos no pueden superar los 20 caracteres.',
+
+            'email.required' => 'El correo electrónico es obligatorio.',
+            'email.email' => 'Debe ingresar un correo válido.',
+            'email.unique' => 'Este correo ya está registrado.',
+
+            'tipo_usuario.required' => 'Debe especificar el tipo de usuario.',
+            'contrasena.required' => 'La contraseña es obligatoria.',
+            'contrasena.min' => 'La contraseña debe tener al menos 6 caracteres.',
         ];
     }
 }
