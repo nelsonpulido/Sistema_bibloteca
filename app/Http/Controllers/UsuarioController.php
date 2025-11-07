@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Usuario;
+use App\Services\UsuarioService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -10,30 +10,27 @@ use Throwable;
 
 class UsuarioController extends Controller
 {
-    /**
-     * Listar todos los usuarios.
-     */
+    
     public function index()
     {
         try {
-            $usuarios = Usuario::with('empleado')->get();
+            $usuarios = UsuarioService::listarUsuarios();
+
             return response()->json([
                 'success' => true,
-                'data'    => $usuarios
+                'data' => $usuarios
             ], 200);
 
         } catch (Throwable $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Error al listar usuarios',
-                'error'   => $e->getMessage()
+                'error' => $e->getMessage()
             ], 500);
         }
     }
 
-    /**
-     * Registrar un nuevo usuario.
-     */
+    
     public function store(Request $request)
     {
         $rules = [
@@ -46,7 +43,6 @@ class UsuarioController extends Controller
             'fecha_registro' => 'nullable|date',
             'tipo_usuario'   => 'required|string|max:30',
             'contrasena'     => 'required|string|min:6',
-            'activo'         => 'nullable|boolean',
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -54,79 +50,40 @@ class UsuarioController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'errors'  => $validator->errors()
+                'errors' => $validator->errors()
             ], 422);
         }
 
         try {
             $data = $request->only([
-                'dni',
-                'nombre',
-                'apellidos',
-                'email',
-                'telefono',
-                'direccion',
-                'fecha_registro',
-                'tipo_usuario',
-                'activo'
+                'dni', 'nombre', 'apellidos', 'email', 'telefono',
+                'direccion', 'fecha_registro', 'tipo_usuario'
             ]);
 
-            // Hashear la contraseña antes de guardar
             $data['contrasena'] = Hash::make($request->input('contrasena'));
+            $data['activo'] = true;
 
-            $usuario = Usuario::create($data);
+            $usuario = UsuarioService::crearUsuario($data);
 
             return response()->json([
                 'success' => true,
                 'message' => 'Usuario creado correctamente',
-                'data'    => $usuario
+                'data' => $usuario
             ], 201);
+
         } catch (Throwable $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'No se pudo crear el usuario',
-                'error'   => $e->getMessage()
+                'error' => $e->getMessage()
             ], 500);
         }
     }
 
-    /**
-     * Mostrar un usuario específico.
-     */
+    
     public function show($id)
     {
-        try {
-            $usuario = Usuario::with(['empleado', 'prestamos'])
-                              ->where('id_usuario', $id)
-                              ->first();
-
-            if (!$usuario) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Usuario no encontrado'
-                ], 404);
-            }
-
-            return response()->json([
-                'success' => true,
-                'data'    => $usuario
-            ], 200);
-            
-        } catch (Throwable $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error al obtener el usuario',
-                'error'   => $e->getMessage()
-            ], 500);
-        }
-    }
-
-    /**
-     * Actualizar un usuario existente.
-     */
-    public function update(Request $request, $id)
-    {
-        $usuario = Usuario::where('id_usuario', $id)->first();
+        $usuario = UsuarioService::obtenerUsuario($id);
 
         if (!$usuario) {
             return response()->json([
@@ -135,6 +92,15 @@ class UsuarioController extends Controller
             ], 404);
         }
 
+        return response()->json([
+            'success' => true,
+            'data' => $usuario
+        ], 200);
+    }
+
+    
+    public function update(Request $request, $id)
+    {
         $rules = [
             'dni'            => 'sometimes|string|max:20|unique:usuarios,dni,' . $id . ',id_usuario',
             'nombre'         => 'sometimes|string|max:50',
@@ -145,7 +111,6 @@ class UsuarioController extends Controller
             'fecha_registro' => 'nullable|date',
             'tipo_usuario'   => 'sometimes|string|max:30',
             'contrasena'     => 'sometimes|string|min:6',
-            'activo'         => 'nullable|boolean',
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -153,42 +118,46 @@ class UsuarioController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'errors'  => $validator->errors()
+                'errors' => $validator->errors()
             ], 422);
         }
 
         try {
-            $data = $request->only([
-                'dni','nombre','apellidos','email','telefono',
-                'direccion','fecha_registro','tipo_usuario','activo'
-            ]);
-
+            $data = $request->except('contrasena');
             if ($request->filled('contrasena')) {
                 $data['contrasena'] = Hash::make($request->input('contrasena'));
             }
 
-            $usuario->update($data);
+            $usuario = UsuarioService::actualizarUsuario($data, $id);
+
+            if (!$usuario) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Usuario no encontrado'
+                ], 404);
+            }
 
             return response()->json([
                 'success' => true,
                 'message' => 'Usuario actualizado correctamente',
-                'data'    => $usuario
+                'data' => $usuario
             ], 200);
+
         } catch (Throwable $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'No se pudo actualizar el usuario',
-                'error'   => $e->getMessage()
+                'error' => $e->getMessage()
             ], 500);
         }
     }
 
     /**
-     * Eliminar un usuario.
+     * Desactivar un usuario.
      */
     public function destroy($id)
     {
-        $usuario = Usuario::where('id_usuario', $id)->first();
+        $usuario = UsuarioService::desactivarUsuario($id);
 
         if (!$usuario) {
             return response()->json([
@@ -197,18 +166,31 @@ class UsuarioController extends Controller
             ], 404);
         }
 
-        try {
-            $usuario->delete();
-            return response()->json([
-                'success' => true,
-                'message' => 'Usuario eliminado correctamente'
-            ], 200);
-        } catch (Throwable $e) {
+        return response()->json([
+            'success' => true,
+            'message' => 'Usuario desactivado correctamente ✅',
+            'data' => $usuario
+        ], 200);
+    }
+
+    /**
+     * Reactivar un usuario.
+     */
+    public function reactivar($id)
+    {
+        $usuario = UsuarioService::reactivarUsuario($id);
+
+        if (!$usuario) {
             return response()->json([
                 'success' => false,
-                'message' => 'No se pudo eliminar el usuario',
-                'error'   => $e->getMessage()
-            ], 500);
+                'message' => 'Usuario no encontrado'
+            ], 404);
         }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Usuario reactivado correctamente ✅',
+            'data' => $usuario
+        ], 200);
     }
 }

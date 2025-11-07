@@ -27,6 +27,7 @@ class LibroRequest extends FormRequest
             'titulo' => ($isUpdate ? 'sometimes' : 'required').'|string|max:50',
             'anio_publicacion' => 'nullable|integer',
             'isbn' => ($isUpdate ? 'sometimes' : 'required').'|string|max:20|unique:libros,isbn,',
+            
             'id_categoria' => 'required|exists:categorias,id_categoria',
             'id_editorial' => 'required|exists:editoriales,id_editorial',
         ];

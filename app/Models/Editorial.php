@@ -10,19 +10,21 @@ class Editorial extends Model
     use HasFactory;
 
     protected $table = 'editoriales';
-    protected $primaryKey ='id_editorial';
+    protected $primaryKey = 'id_editorial';
 
-    protected $Fillable = [
-        'id_editorial',
+    
+    protected $fillable = [
         'nombre',
+        'direccion',
+        'telefono',
+        'correo',
         'pais',
         'ciudad',
-        'telefono',
-        'email',
+        'activo'
     ];
 
-    public function libros(){
+    public function libros()
+    {
         return $this->hasMany(Libro::class, 'id_editorial', 'id_editorial');
     }
-    //
 }
