@@ -10,11 +10,13 @@ return new class extends Migration
     {
         Schema::create('editoriales', function (Blueprint $table) {
             $table->id('id_editorial');
-            $table->string('nombre', 50);
-            $table->string('pais', 50)->nullable();
-            $table->string('ciudad', 50)->nullable();
+            $table->string('nombre', 100)->unique();
+            $table->string('direccion', 150)->nullable();
             $table->string('telefono', 20)->nullable();
-            $table->string('email', 100)->nullable();
+            $table->string('correo', 100)->nullable();
+            $table->string('pais', 100)->nullable();
+            $table->string('ciudad', 100)->nullable();
+            $table->boolean('activo')->default(true);
             $table->timestamps();
         });
     }

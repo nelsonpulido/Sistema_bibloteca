@@ -25,6 +25,8 @@ Route::get('/user', function () {
 
 //  Rutas para la gestión de usuarios
 Route::apiResource('usuarios', UsuarioController::class);
+Route::put('usuarios/{id}/reactivar', [UsuarioController::class, 'reactivar']);
+
 
 //  Rutas para la gestión de empleados
 Route::apiResource('empleados', EmpleadoController::class);
@@ -33,6 +35,8 @@ Route::apiResource('empleados', EmpleadoController::class);
 Route::apiResource('categorias', CategoriaController::class);
 
 Route::apiResource('editoriales', EditorialController::class);
+Route::put('editoriales/{id}/reactivar', [EditorialController::class, 'reactivar']);
+
 
 //  Rutas para la gestión de autores
 Route::apiResource('autores', AutorController::class);

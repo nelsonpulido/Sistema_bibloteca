@@ -39,7 +39,10 @@ class EditorialController extends Controller
             'nombre' => 'required|string|max:100|unique:editoriales,nombre',
             'direccion' => 'nullable|string|max:150',
             'telefono' => 'nullable|string|max:20',
-            'correo' => 'nullable|email|max:100'
+            'correo' => 'nullable|email|max:100',
+            'pais' => 'nullable|string|max:50',
+            'ciudad' => 'nullable|string|max:50',
+            'activo' => 'boolean'
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -57,11 +60,14 @@ class EditorialController extends Controller
                 'direccion' => $request->direccion,
                 'telefono' => $request->telefono,
                 'correo' => $request->correo,
+                'pais' => $request->pais,
+                'ciudad' => $request->ciudad,
+                'activo' => $request->activo ?? true,
             ]);
 
             return response()->json([
                 'success' => true,
-                'message' => 'Editorial creada correctamente',
+                'message' => 'Editorial creada correctamente ✅',
                 'data' => $editorial
             ], 201);
         } catch (Throwable $e) {
@@ -119,7 +125,10 @@ class EditorialController extends Controller
             'nombre' => 'sometimes|string|max:100|unique:editoriales,nombre,' . $id . ',id_editorial',
             'direccion' => 'nullable|string|max:150',
             'telefono' => 'nullable|string|max:20',
-            'correo' => 'nullable|email|max:100'
+            'correo' => 'nullable|email|max:100',
+            'pais' => 'nullable|string|max:50',
+            'ciudad' => 'nullable|string|max:50',
+            'activo' => 'boolean'
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -132,11 +141,13 @@ class EditorialController extends Controller
         }
 
         try {
-            $editorial->update($request->only(['nombre', 'direccion', 'telefono', 'correo']));
+            $editorial->update($request->only([
+                'nombre', 'direccion', 'telefono', 'correo', 'pais', 'ciudad', 'activo'
+            ]));
 
             return response()->json([
                 'success' => true,
-                'message' => 'Editorial actualizada correctamente',
+                'message' => 'Editorial actualizada correctamente ✏️',
                 'data' => $editorial
             ], 200);
         } catch (Throwable $e) {
@@ -167,7 +178,7 @@ class EditorialController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Editorial eliminada correctamente'
+                'message' => 'Editorial eliminada correctamente 🗑️'
             ], 200);
         } catch (Throwable $e) {
             return response()->json([
@@ -176,5 +187,28 @@ class EditorialController extends Controller
                 'error' => $e->getMessage()
             ], 500);
         }
+    }
+
+    /**
+     * Reactivar una editorial (si tiene campo activo)
+     */
+    public function reactivar($id)
+    {
+        $editorial = Editorial::find($id);
+
+        if (!$editorial) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Editorial no encontrada'
+            ], 404);
+        }
+
+        $editorial->update(['activo' => true]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Editorial reactivada correctamente ✅',
+            'data' => $editorial
+        ], 200);
     }
 }
