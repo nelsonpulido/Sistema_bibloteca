@@ -30,7 +30,7 @@ class EditorialService
         return $editorial;
     }
 
-    public static function eliminarEditorial($id)
+    public static function Desactivar($id)
     {
         $editorial = Editorial::find($id);
         if (!$editorial) return null;
@@ -39,7 +39,7 @@ class EditorialService
         return $editorial;
     }
 
-    public static function reactivarEditorial($id)
+    public static function reactivar($id)
     {
         $editorial = Editorial::find($id);
         if (!$editorial) return null;

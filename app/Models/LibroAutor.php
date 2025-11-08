@@ -10,11 +10,13 @@ class LibroAutor extends Model
     use HasFactory;
 
     protected $table = 'libro_autor';
-    public $timestamps = false;
+    protected $primaryKey = 'id_libro_autor';
+    public $timestamps = false; // 🔥 Desactivar los timestamps
 
     protected $fillable = [
         'id_libro',
         'id_autor',
+        'fecha_asignacion',
     ];
 
     public function libro()
@@ -27,4 +29,3 @@ class LibroAutor extends Model
         return $this->belongsTo(Autor::class, 'id_autor', 'id_autor');
     }
 }
-

@@ -13,11 +13,14 @@ class Prestamo extends Model
     protected $primaryKey = 'id_prestamo';
 
     protected $fillable = [
-        'id_usuario',
+         'id_usuario',
         'id_libro',
+        'id_empleado',
         'fecha_prestamo',
-        'fecha_devolucion',
+        'fecha_devolucion_esperada',
+        'fecha_devolucion_real',
         'estado',
+        'observaciones'
     ];
 
     public function usuario()

@@ -150,30 +150,64 @@ class PrestamoController extends Controller
     /**
      * Eliminar un préstamo
      */
-    public function destroy($id)
-    {
-        $prestamo = Prestamo::find($id);
+    public function desactivar($id)
+{
+    $prestamo = Prestamo::find($id);
 
-        if (!$prestamo) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Préstamo no encontrado'
-            ], 404);
-        }
+    if (!$prestamo) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Préstamo no encontrado'
+        ], 404);
+    }
 
-        try {
-            $prestamo->delete();
+    try {
+        $prestamo->estado = 'inactivo';
+        $prestamo->save();
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Préstamo eliminado correctamente'
-            ], 200);
-        } catch (Throwable $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error al eliminar el préstamo',
-                'error' => $e->getMessage()
-            ], 500);
-        }
+        return response()->json([
+            'success' => true,
+            'message' => 'Préstamo desactivado correctamente',
+            'data' => $prestamo
+        ], 200);
+    } catch (Throwable $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Error al desactivar el préstamo',
+            'error' => $e->getMessage()
+        ], 500);
     }
 }
+
+/**
+ * Reactivar un préstamo (volverlo a estado activo o prestado)
+ */
+public function reactivar($id)
+{
+    $prestamo = Prestamo::find($id);
+
+    if (!$prestamo) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Préstamo no encontrado'
+        ], 404);
+    }
+
+    try {
+        $prestamo->estado = 'prestado';
+        $prestamo->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Préstamo reactivado correctamente',
+            'data' => $prestamo
+        ], 200);
+    } catch (Throwable $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Error al reactivar el préstamo',
+            'error' => $e->getMessage()
+        ], 500);
+    }
+ }
+ }

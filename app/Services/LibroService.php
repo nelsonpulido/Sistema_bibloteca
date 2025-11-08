@@ -1,44 +1,48 @@
 <?php
 
-namespace App\Service;
+namespace App\Services; // 👈 En plural (Services), asegúrate de que el nombre del folder coincida
 
 use App\Models\Libro;
 
 class LibroService
 {
-    public function obtener todos()
+    // Obtener todos los libros
+    public function obtenerTodos()
     {
-        return libro::all();
+        return Libro::all();
     }
 
-    public function ObtenerPorId($id)
+    // Obtener un libro por su ID
+    public function obtenerPorId($id)
     {
-        return libro::find($id);
+        return Libro::find($id);
     }
 
+    // Crear un nuevo libro
     public function crear($datos)
     {
-        return libro::create($datos);
+        return Libro::create($datos);
     }
 
+    // Actualizar un libro existente
     public function actualizar($id, $datos)
     {
-        $Libro = Libro::find($id);
+        $libro = Libro::find($id);
         if ($libro) {
-            $Libro->update($datos);
+            $libro->update($datos);
             return $libro;
         }
         return null;
     }
 
+    // Eliminar un libro (aquí mejor lo marcamos como inactivo en lugar de borrarlo)
     public function eliminar($id)
     {
-        $libro = libro::find($id);
-        if ($Libro) {
-            $Libro->update(Estado Activo Inactivo );
+        $libro = Libro::find($id);
+        if ($libro) {
+            $libro->update(['activo' => false]);
             return true;
         }
-        return false
+        return false;
     }
 }
-

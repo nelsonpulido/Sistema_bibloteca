@@ -12,7 +12,7 @@ class Autor extends Model
     protected $table = 'autores';
     protected $primaryKey = 'id_autor';
 
-    protected $Fillable =[
+    protected $fillable =[
         'id_autor',
         'nombre',
         'apellidos',

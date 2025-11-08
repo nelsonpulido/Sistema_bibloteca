@@ -25,7 +25,7 @@ class EmpleadoService
 
     public function delete($id)
     {
-       $empleado->update(Estado Activo Inactivo);
-        return $empleado->delete();
+       $empleado->update(['activo' => true]);
+        return $empleado->fresh();
     }
 }

@@ -61,6 +61,7 @@ class LibroController extends Controller
                 'isbn' => $request->isbn,
                 'id_categoria' => $request->id_categoria,
                 'id_editorial' => $request->id_editorial,
+                'activo' => true // Por defecto activo
             ]);
 
             if ($request->has('autores')) {
@@ -170,9 +171,9 @@ class LibroController extends Controller
     }
 
     /**
-     * Eliminar un libro
+     * Eliminar (desactivar) un libro
      */
-    public function destroy($id)
+    public function desactivar($id)
     {
         $libro = Libro::find($id);
 
@@ -184,16 +185,48 @@ class LibroController extends Controller
         }
 
         try {
-            $libro->delete();
+            // Desactivamos el libro (en lugar de eliminarlo físicamente)
+            $libro->update(['activo' => false]);
 
             return response()->json([
                 'success' => true,
-                'message' => 'Libro eliminado correctamente'
+                'message' => 'Libro desactivado correctamente'
             ], 200);
         } catch (Throwable $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Error al eliminar el libro',
+                'message' => 'Error al desactivar el libro',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Reactivar un libro desactivado
+     */
+    public function reactivar($id)
+    {
+        $libro = Libro::find($id);
+
+        if (!$libro) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Libro no encontrado'
+            ], 404);
+        }
+
+        try {
+            $libro->update(['activo' => true]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Libro reactivado correctamente',
+                'data' => $libro
+            ], 200);
+        } catch (Throwable $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al reactivar el libro',
                 'error' => $e->getMessage()
             ], 500);
         }
