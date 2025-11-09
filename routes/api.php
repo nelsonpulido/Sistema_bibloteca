@@ -24,6 +24,7 @@ Route::get('/user', function () {
 Route::apiResource('usuarios', UsuarioController::class);
 Route::put('usuarios/{id}/reactivar', [UsuarioController::class, 'reactivar']);
 
+
 //  Rutas para la gestión de empleados
 Route::apiResource('empleados', EmpleadoController::class);
 
