@@ -45,7 +45,7 @@ class UsuarioService
     }
 
     
-    public static function desactivarUsuario($id_usuario)
+    public static function desactivar($id_usuario)
     {
         $usuario = Usuario::find($id_usuario);
 
@@ -59,7 +59,7 @@ class UsuarioService
     }
 
     
-    public static function reactivarUsuario($id_usuario)
+    public static function reactivar($id_usuario)
     {
         $usuario = Usuario::find($id_usuario);
 

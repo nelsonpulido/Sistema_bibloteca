@@ -23,7 +23,7 @@ class EmpleadoService
         return $empleado;
     }
 
-    public function delete($id)
+    public function inactivo ($id)
     {
        $empleado->update(['activo' => true]);
         return $empleado->fresh();

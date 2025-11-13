@@ -6,19 +6,19 @@ use App\Models\Libro;
 
 class LibroService
 {
-    // Obtener todos los libros
+    
     public function obtenerTodos()
     {
         return Libro::all();
     }
 
-    // Obtener un libro por su ID
+    
     public function obtenerPorId($id)
     {
         return Libro::find($id);
     }
 
-    // Crear un nuevo libro
+    
     public function crear($datos)
     {
         return Libro::create($datos);
@@ -35,8 +35,8 @@ class LibroService
         return null;
     }
 
-    // Eliminar un libro (aquí mejor lo marcamos como inactivo en lugar de borrarlo)
-    public function eliminar($id)
+    
+    public function Desactivar($id)
     {
         $libro = Libro::find($id);
         if ($libro) {

@@ -7,33 +7,25 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class PrestamoService
 {
-    /**
-     * Obtener todos los préstamos
-     */
+    
     public function obtenerTodos()
     {
         return Prestamo::all();
     }
 
-    /**
-     * Obtener un préstamo por ID
-     */
+    
     public function obtenerPorId($id)
     {
         return Prestamo::findOrFail($id);
     }
 
-    /**
-     * Crear un préstamo
-     */
+    
     public function crear($datos)
     {
         return Prestamo::create($datos);
     }
 
-    /**
-     * Actualizar un préstamo existente
-     */
+    
     public function actualizar($id, $datos)
     {
         $prestamo = Prestamo::find($id);
