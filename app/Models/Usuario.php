@@ -22,7 +22,7 @@ class Usuario extends Model
         'direccion',
         'fecha_registro',
         'tipo_usuario',
-        'contrasena',
+        'password',
         'activo',
     ];
 

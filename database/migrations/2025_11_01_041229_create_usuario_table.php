@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('direccion', 180)->nullable();
             $table->date('fecha_registro')->nullable();
             $table->string('tipo_usuario', 30);
-            $table->string('contrasena', 180);
+            $table->string('password', 180);
             $table->boolean('activo')->default(true);
             $table->timestamps();
         });

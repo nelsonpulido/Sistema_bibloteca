@@ -42,7 +42,7 @@ class UsuarioController extends Controller
             'direccion'      => 'nullable|string|max:180',
             'fecha_registro' => 'nullable|date',
             'tipo_usuario'   => 'required|string|max:30',
-            'contrasena'     => 'required|string|min:6',
+            'password'     => 'required|string|min:6',
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -60,7 +60,7 @@ class UsuarioController extends Controller
                 'direccion', 'fecha_registro', 'tipo_usuario'
             ]);
 
-            $data['contrasena'] = Hash::make($request->input('contrasena'));
+            $data['password'] = Hash::make($request->input('password'));
             $data['activo'] = true;
 
             $usuario = UsuarioService::crearUsuario($data);
@@ -110,7 +110,7 @@ class UsuarioController extends Controller
             'direccion'      => 'nullable|string|max:180',
             'fecha_registro' => 'nullable|date',
             'tipo_usuario'   => 'sometimes|string|max:30',
-            'contrasena'     => 'sometimes|string|min:6',
+            'password'     => 'sometimes|string|min:6',
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -123,9 +123,9 @@ class UsuarioController extends Controller
         }
 
         try {
-            $data = $request->except('contrasena');
-            if ($request->filled('contrasena')) {
-                $data['contrasena'] = Hash::make($request->input('contrasena'));
+            $data = $request->except('password');
+            if ($request->filled('password')) {
+                $data['password'] = Hash::make($request->input('password'));
             }
 
             $usuario = UsuarioService::actualizarUsuario($data, $id);
