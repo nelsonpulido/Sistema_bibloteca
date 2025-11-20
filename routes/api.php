@@ -22,6 +22,9 @@ Route::post('/registro', [UsuarioController::class, 'store']);
 Route::post('/login', [AuthController::class, 'login']);
 
 
+
+
+
 // ----------------------
 // PRUEBA API
 // ----------------------
@@ -34,9 +37,9 @@ Route::get('/user', function () {
 
 
 // ----------------------
-// 🟥 RUTAS ADMIN
+// RUTAS ADMIN
 // ----------------------
-Route::middleware(['auth:api', 'tipo_usuario:admin'])->group(function () {
+Route::middleware(['jwt.cookie', 'tipo_usuario:admin'])->group(function () {
 
     // Usuarios
     Route::apiResource('usuarios', UsuarioController::class);
@@ -77,9 +80,9 @@ Route::middleware(['auth:api', 'tipo_usuario:admin'])->group(function () {
 
 
 // ----------------------
-// 🟦 RUTAS BIBLIOTECARIO
+// RUTAS BIBLIOTECARIO
 // ----------------------
-Route::middleware(['auth:api', 'tipo_usuario:bibliotecario'])->group(function () {
+Route::middleware(['jwt.cookie', 'tipo_usuario:bibliotecario'])->group(function () {
 
     Route::get('libros', [LibroController::class, 'index']);
     Route::get('autores', [AutorController::class, 'index']);
@@ -90,9 +93,9 @@ Route::middleware(['auth:api', 'tipo_usuario:bibliotecario'])->group(function ()
 
 
 // ----------------------
-// 🟩 RUTAS USUARIO NORMAL
+//  RUTAS USUARIO NORMAL
 // ----------------------
-Route::middleware(['auth:api', 'tipo_usuario:usuario'])->group(function () {
+Route::middleware(['jwt.cookie', 'tipo_usuario:usuario'])->group(function () {
 
     Route::get('libros', [LibroController::class, 'index']);
     Route::get('autores', [AutorController::class, 'index']);
