@@ -16,7 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
            'jwt.auth'      => \Tymon\JWTAuth\Http\Middleware\Authenticate::class,
 
-            'tipo_usuario' => \App\Http\Middleware\tipo_usuarioMiddleware::class,
+            'tipo_usuario' => \App\Http\Middleware\TipoUsuarioMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

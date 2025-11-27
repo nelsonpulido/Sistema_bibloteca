@@ -39,5 +39,5 @@ class JwtFromCookieMiddleware
         }
 
         return $next($request);
-    }
+}
 }

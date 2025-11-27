@@ -10,7 +10,7 @@ use Throwable;
 
 class UsuarioController extends Controller
 {
-    
+    // Listar usuarios
     public function index()
     {
         try {
@@ -30,7 +30,7 @@ class UsuarioController extends Controller
         }
     }
 
-    
+    // Crear usuario
     public function store(Request $request)
     {
         $rules = [
@@ -42,7 +42,7 @@ class UsuarioController extends Controller
             'direccion'      => 'nullable|string|max:180',
             'fecha_registro' => 'nullable|date',
             'tipo_usuario'   => 'required|string|max:30',
-            'password'     => 'required|string|min:6',
+            'password'       => 'required|string|min:6',
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -80,7 +80,7 @@ class UsuarioController extends Controller
         }
     }
 
-    
+    // Mostrar usuario
     public function show($id)
     {
         $usuario = UsuarioService::obtenerUsuario($id);
@@ -98,19 +98,18 @@ class UsuarioController extends Controller
         ], 200);
     }
 
-    
+    // Actualizar usuario
     public function update(Request $request, $id)
     {
         $rules = [
-            'dni'            => 'sometimes|string|max:20|unique:usuarios,dni,' . $id . ',id_usuario',
-            'nombre'         => 'sometimes|string|max:50',
-            'apellidos'      => 'sometimes|string|max:50',
-            'email'          => 'sometimes|email|max:100|unique:usuarios,email,' . $id . ',id_usuario',
-            'telefono'       => 'nullable|string|max:20',
-            'direccion'      => 'nullable|string|max:180',
-            'fecha_registro' => 'nullable|date',
-            'tipo_usuario'   => 'sometimes|string|max:30',
-            'password'     => 'sometimes|string|min:6',
+            'dni'        => 'sometimes|string|max:20|unique:usuarios,dni,' . $id . ',id_usuario',
+            'nombre'     => 'sometimes|string|max:50',
+            'apellidos'  => 'sometimes|string|max:50',
+            'email'      => 'sometimes|email|max:100|unique:usuarios,email,' . $id . ',id_usuario',
+            'telefono'   => 'nullable|string|max:20',
+            'direccion'  => 'nullable|string|max:180',
+            'tipo_usuario' => 'sometimes|string|max:30',
+            'password'   => 'sometimes|string|min:6',
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -124,8 +123,9 @@ class UsuarioController extends Controller
 
         try {
             $data = $request->except('password');
+
             if ($request->filled('password')) {
-                $data['password'] = Hash::make($request->input('password'));
+                $data['password'] = Hash::make($request->password);
             }
 
             $usuario = UsuarioService::actualizarUsuario($data, $id);
@@ -152,12 +152,10 @@ class UsuarioController extends Controller
         }
     }
 
-    /**
-     * Desactivar un usuario.
-     */
+    // Desactivar usuario
     public function destroy($id)
     {
-        $usuario = UsuarioService::desactivarUsuario($id);
+        $usuario = UsuarioService::desactivar($id);
 
         if (!$usuario) {
             return response()->json([
@@ -168,17 +166,15 @@ class UsuarioController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Usuario desactivado correctamente ✅',
+            'message' => 'Usuario desactivado correctamente',
             'data' => $usuario
         ], 200);
     }
 
-    /**
-     * Reactivar un usuario.
-     */
+    // Reactivar usuario
     public function reactivar($id)
     {
-        $usuario = UsuarioService::reactivarUsuario($id);
+        $usuario = UsuarioService::reactivar($id);
 
         if (!$usuario) {
             return response()->json([
@@ -189,7 +185,7 @@ class UsuarioController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Usuario reactivado correctamente ✅',
+            'message' => 'Usuario reactivado correctamente',
             'data' => $usuario
         ], 200);
     }

@@ -12,10 +12,10 @@ class User extends Authenticatable implements JWTSubject
     use HasFactory, Notifiable;
 
     protected $table = 'usuarios';
-    
-    // ← AGREGAR ESTAS DOS LÍNEAS
-    protected $primaryKey = 'id_usuario';  // El nombre de tu columna ID
-    public $incrementing = true;           // Si es auto-increment
+
+    protected $primaryKey = 'id_usuario';
+    public $incrementing = true;
+    public $timestamps = false; // <-- si tu tabla NO tiene created_at y updated_at
 
     protected $fillable = [
         'dni',
@@ -37,8 +37,6 @@ class User extends Authenticatable implements JWTSubject
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
             'activo' => 'boolean',
         ];
     }
