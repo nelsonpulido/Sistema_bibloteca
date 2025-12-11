@@ -33,7 +33,7 @@ class UsuarioRequest extends FormRequest
             'direccion' => 'nullable|string|max:50',
             'fecha_registro' => 'nullable|date',
             'tipo_usuario' => ($isUpdate ? 'sometimes' : 'required').'|string|max:30',
-            'contrasena' => ($isUpdate ? 'sometimes' : 'required').'|string|min:6',
+            'password' => ($isUpdate ? 'sometimes' : 'required').'|string|min:6',
             'activo' => 'boolean',
         ];
     }
@@ -55,8 +55,8 @@ class UsuarioRequest extends FormRequest
             'email.unique' => 'Este correo ya está registrado.',
 
             'tipo_usuario.required' => 'Debe especificar el tipo de usuario.',
-            'contrasena.required' => 'La contraseña es obligatoria.',
-            'contrasena.min' => 'La contraseña debe tener al menos 6 caracteres.',
+            'password.required' => 'La contraseña es obligatoria.',
+            'password.min' => 'La contraseña debe tener al menos 6 caracteres.',
         ];
     }
 }
